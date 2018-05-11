@@ -1,0 +1,44 @@
+{
+  "name": "nucssa-pick-up-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint --ext .js ./",
+    "fix": "./node_modules/.bin/eslint --ext .js ./ --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuanchenxi95/nucssa-pick-up-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuanchenxi95/nucssa-pick-up-server/issues"
+  },
+  "homepage": "https://github.com/yuanchenxi95/nucssa-pick-up-server#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "compression": "^1.7.2",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-beta.3",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "joi": "^13.3.0",
+    "jsonwebtoken": "^8.2.1",
+    "lodash": "^4.17.10",
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "winston": "^2.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-plugin-node": "^6.0.1",
+    "forever": "^0.15.3"
+  }
+}
