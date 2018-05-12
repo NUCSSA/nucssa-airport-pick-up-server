@@ -9,7 +9,7 @@ module.exports = function (app) {
     res.send('Hello World');
   });
 
-  const driverFormRouter =require('./driverForm');
-  apiRouter.use('/driverForm', driverFormRouter);
+  const formsRouter =require('./forms');
+  apiRouter.use('/forms', formsRouter);
 
 };
