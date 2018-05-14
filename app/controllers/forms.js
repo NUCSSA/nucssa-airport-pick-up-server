@@ -13,7 +13,11 @@ const {
   generateBody,
   joiDriverFormSchema,
   joiStudentFormSchema,
-} = require('../module/forms');
+} = require('../modules/forms');
+const {
+  sendDriverEmail,
+  sendStudentEmail,
+} = require('../modules/mailer');
 
 router.post('/submissions/:formType', async function (req, res) {
 
@@ -61,6 +65,13 @@ router.post('/submissions/:formType', async function (req, res) {
       newFormBody,
       formType,
     });
+
+    if (formType === driverType) {
+      await sendDriverEmail(newFormBody);
+    } else if (formType === studentType) {
+      await sendStudentEmail(newFormBody);
+    }
+
     res.sendStatus(200);
   } catch (err) {
     if (err.response.status) {

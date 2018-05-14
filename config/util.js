@@ -5,6 +5,8 @@ const requiredEnvList = [
   'GITEE_ACCESS_TOKEN',
   'GITEE_USERNAME',
   'GITEE_REPOSITORY_NAME',
+  'EMAIL_USER',
+  'EMAIL_PASSWORD',
 ];
 
 function checkRequiredEnv() {

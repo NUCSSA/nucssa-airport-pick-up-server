@@ -77,5 +77,5 @@ module.exports = {
   driverType,
   studentType,
   joiDriverFormSchema,
-  joiStudentFormSchema
+  joiStudentFormSchema,
 };
