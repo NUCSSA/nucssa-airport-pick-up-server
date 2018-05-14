@@ -77,7 +77,7 @@ router.post('/submissions/:formType', async function (req, res) {
     if (err.response.status) {
       res.sendStatus(err.response.status);
     } else {
-      res.sendStatus(500);
+      res.status(500).send(err.message);
     }
   }
 
