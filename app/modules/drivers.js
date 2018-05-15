@@ -10,6 +10,11 @@ async function findAllDrivers() {
   return DriverSubmission.find();
 }
 
+async function findDriver({ driverWechatId }) {
+  return DriverSubmission.findOne({
+    wechatId: driverWechatId,
+  });
+}
 async function verifyDriver({ driverWechatId }) {
   return DriverSubmission.findOneAndUpdate({
     wechatId: driverWechatId,
@@ -21,5 +26,6 @@ async function verifyDriver({ driverWechatId }) {
 module.exports = {
   findAllDrivers,
   verifyDriver,
+  findDriver,
 };
 

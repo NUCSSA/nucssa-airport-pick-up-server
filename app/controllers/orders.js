@@ -16,7 +16,6 @@ const {
   joiOrderSchema,
 } = require('../modules/orders');
 
-
 router.get('/studentSubmissions', async function(req, res) {
   let studentSubmissions = await findAllStudentSubmissions();
   res.json(studentSubmissions);
