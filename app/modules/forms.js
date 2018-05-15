@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const _ = require('lodash');
 
 const { driverSubmissionSchemaString } = require('../models/driverSubmission');
 const { studentSubmissionSchemaString } = require('../models/studentSubmission');

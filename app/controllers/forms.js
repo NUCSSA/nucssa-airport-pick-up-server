@@ -3,9 +3,10 @@
 const express = require('express');
 const Joi = require('joi');
 const _ = require('lodash');
+const router = express.Router();
 
 const { sendJoiValidationError } = require('../util');
-const router = express.Router();
+
 
 const {
   studentType,
