@@ -1,11 +1,11 @@
 'use strict';
 
 const express = require('express');
-const Joi = require('joi');
+// const Joi = require('joi');
 const _ = require('lodash');
 const router = express.Router();
 
-const { sendJoiValidationError } = require('../util');
+// const { sendJoiValidationError } = require('../util');
 const { findAllDrivers, findDriver, verifyDriver} = require('../modules/drivers');
 
 router.get('/', async function(req, res) {

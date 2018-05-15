@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 
 const { studentSubmissionSchemaString } = require('../models/studentSubmission');
-const { orderSchemaString, BEFORE, DONE, IN_PROGRESS } = require('../models/order');
+// const { orderSchemaString, BEFORE, DONE, IN_PROGRESS } = require('../models/order');
+const { orderSchemaString, BEFORE } = require('../models/order');
 
 
 const StudentSubmission = mongoose.model(studentSubmissionSchemaString);
