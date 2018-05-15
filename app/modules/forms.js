@@ -1,17 +1,15 @@
 const Joi = require('joi');
-const axios = require('axios');
 const _ = require('lodash');
 
-const { convertObjectToBase64 } = require('../util');
+const { driverSubmissionSchemaString } = require('../models/driverSubmission');
+const { studentSubmissionSchemaString } = require('../models/studentSubmission');
+const mongoose = require('mongoose');
+
+const DriverSubmission = mongoose.model(driverSubmissionSchemaString);
+const StudentSubmission = mongoose.model(studentSubmissionSchemaString);
 
 const driverType = 'driver';
 const studentType = 'student';
-
-const GITEE_ACCESS_TOKEN = process.env['GITEE_ACCESS_TOKEN'];
-const GITEE_USERNAME = process.env['GITEE_USERNAME'];
-const GITEE_REPOSITORY = process.env['GITEE_REPOSITORY_NAME'];
-const GITEE_DB_URI = `https://gitee.com/api/v5/repos/${GITEE_USERNAME}/${GITEE_REPOSITORY}/contents/`;
-
 
 const joiDriverFormSchema = Joi.object().keys({
   availableTimeSlot: Joi.string(),
@@ -28,6 +26,7 @@ const joiDriverFormSchema = Joi.object().keys({
 });
 
 const joiStudentFormSchema = Joi.object().keys({
+  wechatId: Joi.string(),
   studentSet: Joi.array().min(1).max(3).items(
     Joi.object().keys({
       name: Joi.string(),
@@ -46,34 +45,24 @@ const joiStudentFormSchema = Joi.object().keys({
 });
 
 
-const generateBody = async ({ newFormBody, formType }) => {
-  let base64Content = convertObjectToBase64(newFormBody);
-
-  let postBody = {
-    'access_token': GITEE_ACCESS_TOKEN,
-    'content': base64Content,
-  };
-
-  let filePath = GITEE_DB_URI;
+const persistSubmission = async ({ newFormBody, formType }) => {
   if (formType === driverType) {
-    let wechatId = newFormBody['wechatId'];
-    filePath += 'driver/' + wechatId;
-    _.assign(postBody, {
-      'message': wechatId,
-    })
+    return DriverSubmission.findOneAndUpdate({
+      wechatId: newFormBody.wechatId,
+    }, newFormBody, {
+      upsert: true,
+    });
   } else if (formType === studentType) {
-    let wechatId = newFormBody['studentSet'][0]['wechatId'];
-    filePath += 'student/' + wechatId;
-    _.assign(postBody, {
-      'message': wechatId,
+    return StudentSubmission.findOneAndUpdate({
+      wechatId: newFormBody.wechatId,
+    }, newFormBody, {
+      upsert: true,
     });
   }
-
-  return axios.post(filePath, postBody);
 };
 
 module.exports = {
-  generateBody,
+  persistSubmission,
   driverType,
   studentType,
   joiDriverFormSchema,

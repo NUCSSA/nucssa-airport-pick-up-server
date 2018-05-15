@@ -7,6 +7,7 @@ const requiredEnvList = [
   'GITEE_REPOSITORY_NAME',
   'EMAIL_USER',
   'EMAIL_PASSWORD',
+  'MONGO_DB_URI',
 ];
 
 function checkRequiredEnv() {

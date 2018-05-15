@@ -10,7 +10,7 @@ const router = express.Router();
 const {
   studentType,
   driverType,
-  generateBody,
+  persistSubmission,
   joiDriverFormSchema,
   joiStudentFormSchema,
 } = require('../modules/forms');
@@ -41,8 +41,8 @@ router.post('/submissions/:formType', async function (req, res) {
       return sendJoiValidationError(joiError, res);
     }
   } else if (formType === studentType) {
-    const fieldList = ['studentSet', 'arrivingTime', 'flightNumber', 'address',
-      'luggageNumber', 'remark'];
+    const fieldList = ['wechatId', 'studentSet', 'arrivingTime',
+      'flightNumber', 'address', 'luggageNumber', 'remark'];
     newFormBody = _.pick(req.body, fieldList);
 
     // validate field
@@ -61,24 +61,28 @@ router.post('/submissions/:formType', async function (req, res) {
   }
 
   try {
-    await generateBody({
+    await persistSubmission({
       newFormBody,
       formType,
     });
-
-    if (formType === driverType) {
-      await sendDriverEmail(newFormBody);
-    } else if (formType === studentType) {
-      await sendStudentEmail(newFormBody);
+    try {
+      if (formType === driverType) {
+        // await sendDriverEmail(newFormBody);
+        // Don't wait for email
+        sendDriverEmail(newFormBody);
+      } else if (formType === studentType) {
+        // await sendStudentEmail(newFormBody);
+        // Don't wait for email
+        sendStudentEmail(newFormBody);
+      }
+    } catch (err) {
+      // TODO: should use sentry to log the error
+      console.log(err);
     }
 
     res.sendStatus(200);
   } catch (err) {
-    if (err.response.status) {
-      res.sendStatus(err.response.status);
-    } else {
-      res.status(500).send(err.message);
-    }
+    res.status(500).send(err.message);
   }
 
 });
