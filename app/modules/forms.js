@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const _ = require('lodash');
 
 const { driverSubmissionSchemaString } = require('../models/driverSubmission');
 const { studentSubmissionSchemaString } = require('../models/studentSubmission');
@@ -43,21 +44,32 @@ const joiStudentFormSchema = Joi.object().keys({
   remark: Joi.string().optional(),
 });
 
+const submissionType = (type) => {
+  if (type === driverType) {
+    return DriverSubmission
+  } else if (type === studentType) {
+    return StudentSubmission
+  }
+};
+
+const isRepeatSubmission = async (submissionModel, wechatId)  => {
+  let submission = await submissionModel.findOne({
+    wechatId: wechatId,
+  });
+  return !_.isNil(submission)
+};
 
 const persistSubmission = async ({ newFormBody, formType }) => {
-  if (formType === driverType) {
-    return DriverSubmission.findOneAndUpdate({
-      wechatId: newFormBody.wechatId,
-    }, newFormBody, {
-      upsert: true,
-    });
-  } else if (formType === studentType) {
-    return StudentSubmission.findOneAndUpdate({
-      wechatId: newFormBody.wechatId,
-    }, newFormBody, {
-      upsert: true,
-    });
+  const submissionModel = submissionType(formType)
+  const { wechatId } = newFormBody
+  if (isRepeatSubmission(submissionModel, wechatId)) {
+    throw new Error('Cannot submit form more than once')
   }
+  return submissionModel.findOneAndUpdate({
+    wechatId: newFormBody.wechatId,
+  }, newFormBody, {
+    upsert: true,
+  });
 };
 
 module.exports = {
