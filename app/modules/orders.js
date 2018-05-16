@@ -41,17 +41,38 @@ async function createOrder({ driverWechatId, studentWechatId }) {
 }
 
 async function findStudentOrder({ studentWechatId }) {
-  return Order.definedPopulate(
+  let studentOrder = await Order.definedPopulate(
     Order.findOne({
       studentWechatId,
     })
   );
+
+  if(!_.isNil(studentOrder)) {
+    return studentOrder;
+  } else {
+    let studentSubmission = await StudentSubmission.findOne({
+      wechatId: studentWechatId,
+    });
+
+    if (_.isNil(studentSubmission)) {
+      return null;
+    }
+
+    return {
+      student: studentSubmission,
+      studentWechatId,
+      driver: null,
+      driverWechatId: null,
+    };
+  }
 }
 
 async function findDriverOrders({ driverWechatId }) {
-  return Order.find({
-    driverWechatId,
-  });
+  return Order.definedPopulate(
+    Order.find({
+      driverWechatId,
+    })
+  );
 }
 
 async function findAllOrders() {
