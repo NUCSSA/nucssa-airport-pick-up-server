@@ -63,7 +63,7 @@ const persistSubmission = async ({ newFormBody, formType }) => {
   const submissionModel = submissionType(formType);
   const { wechatId } = newFormBody;
   let isExist = await isRecordExist(submissionModel, wechatId);
-  if (isExist === false) {
+  if (isExist === true) {
     throw new Error('Cannot submit form more than once')
   }
   return submissionModel.findOneAndUpdate({
