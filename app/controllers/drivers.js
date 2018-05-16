@@ -7,6 +7,7 @@ const router = express.Router();
 
 // const { sendJoiValidationError } = require('../util');
 const { findAllDrivers, findDriver, verifyDriver} = require('../modules/drivers');
+const { sendDriverVerificationEmail } = require('../modules/mailer');
 
 router.get('/', async function(req, res) {
   let allDrivers = await findAllDrivers();
@@ -32,8 +33,20 @@ router.get('/:driverWechatId', async function(req, res) {
 
 router.post('/verify/:driverWechatId', async function(req, res) {
   let driverWechatId = req.params['driverWechatId'];
-  await verifyDriver({ driverWechatId });
-  res.sendStatus(200);
+  try {
+    await verifyDriver({ driverWechatId });
+    let driver = await findDriver({ driverWechatId });
+    try {
+      await sendDriverVerificationEmail(driver);
+    } catch (err) {
+      // TODO: should use sentry to log the error
+      console.log(err);
+    }
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+
 });
 
 module.exports = router;

@@ -15,6 +15,10 @@ const {
   findAllOrders,
   joiOrderSchema,
 } = require('../modules/orders');
+const { sendDriverTakingOrderEmail, sendStudentTakingOrderEmail } = require('../modules/mailer');
+const { findDriver } = require('../modules/drivers');
+const { findStudentSubmission } = require('../modules/students');
+
 
 router.get('/studentSubmissions', async function(req, res) {
   let studentSubmissions = await findAllStudentSubmissions();
@@ -54,6 +58,17 @@ router.post('/create', async function(req, res) {
   }
   try {
     await createOrder(reqBody);
+    try {
+      // TODO: Incorrect implementation shouldn't block the function.
+      let { studentWechatId, driverWechatId } = reqBody;
+      let driver = await findDriver({ driverWechatId });
+      sendDriverTakingOrderEmail(driver, studentWechatId);
+      let studentSubmission = await findStudentSubmission({ studentWechatId});
+      sendStudentTakingOrderEmail(studentSubmission);
+    } catch (err) {
+      // TODO: should use sentry to log the error
+      console.log(err);
+    }
     res.sendStatus(200);
   } catch (err) {
     res.status(500).send(err.message);

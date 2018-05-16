@@ -4,6 +4,14 @@ const _ = require('lodash');
 const EMAIL_USER = process.env['EMAIL_USER'];
 const EMAIL_PASSWORD = process.env['EMAIL_PASSWORD'];
 
+const {
+  getDriverSubmissionHTML,
+  getStudentSubmissionHTML,
+  getDriverVerificationSuccessHTML,
+  getDriverTakingOrderHTML,
+  getStudentTakingOrderHTML,
+} = require('../data/emailTempaltes');
+
 let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -24,23 +32,53 @@ function buildMailOptions({ to, subject, htmlText }) {
 }
 
 function buildDriverOptions(driverSubmission) {
-  let { huskyEmail, name } = driverSubmission;
+  let { huskyEmail } = driverSubmission;
 
   return buildMailOptions({
     to: huskyEmail,
     subject: 'NUCSSA接机活动: 司机报名成功',
-    htmlText: `<h4>你好，${name}</h4><h4>    感谢您报名NUCSSA接机服务</h4>`,
+    htmlText: getDriverSubmissionHTML(driverSubmission),
   })
 }
 
 
-function buildStudentOptions(individualStudent) {
+function buildStudentOptions(studentSubmission, individualStudent) {
+  let { email } = individualStudent;
+
+  return buildMailOptions({
+    to: email,
+    subject: 'NUCSSA接机活动: 乘客报名成功',
+    htmlText: getStudentSubmissionHTML(studentSubmission, individualStudent),
+  })
+}
+
+function buildDriverVerificationOptions(driverSubmission) {
+  let { huskyEmail, name } = driverSubmission;
+
+  return buildMailOptions({
+    to: huskyEmail,
+    subject: 'NUCSSA接机活动: 司机认证成功',
+    htmlText: getDriverVerificationSuccessHTML(name),
+  })
+}
+
+function buildDriverTakingOrderOptions(driverSubmission, studentWechatId) {
+  let { huskyEmail, name } = driverSubmission;
+
+  return buildMailOptions({
+    to: huskyEmail,
+    subject: 'NUCSSA接机活动: 成功接单',
+    htmlText: getDriverTakingOrderHTML(name, studentWechatId),
+  })
+}
+
+function buildStudentTakingOrderOptions(studentWechatId, individualStudent) {
   let { email, name } = individualStudent;
 
   return buildMailOptions({
     to: email,
     subject: 'NUCSSA接机活动: 乘客报名成功',
-    htmlText: `<h4>你好，${name}</h4><h4>    感谢您报名NUCSSA接机服务</h4>`,
+    htmlText: getStudentTakingOrderHTML(name, studentWechatId),
   })
 }
 
@@ -55,7 +93,29 @@ async function sendDriverEmail(driverSubmission) {
 
 async function sendStudentEmail(studentSubmission) {
   let studentMailOptionSet = _.map(studentSubmission.studentSet, (s) => {
-    return buildStudentOptions(s);
+    return buildStudentOptions(studentSubmission, s);
+  });
+
+  let asyncFunctionSet = _.map(studentMailOptionSet, (studentMailOption) => {
+    return sendMail(studentMailOption);
+  });
+
+  return Promise.all(asyncFunctionSet);
+}
+
+async function sendDriverVerificationEmail(driverSubmission) {
+  let driverVerificationOptions = buildDriverVerificationOptions(driverSubmission);
+  return sendMail(driverVerificationOptions);
+}
+
+async function sendDriverTakingOrderEmail(driverSubmission, studentWechatId) {
+  let driverTakingOrderOptions = buildDriverTakingOrderOptions(driverSubmission, studentWechatId);
+  return sendMail(driverTakingOrderOptions);
+}
+
+async function sendStudentTakingOrderEmail(studentSubmission) {
+  let studentMailOptionSet = _.map(studentSubmission.studentSet, (s) => {
+    return buildStudentTakingOrderOptions(studentSubmission.wechatId, s);
   });
 
   let asyncFunctionSet = _.map(studentMailOptionSet, (studentMailOption) => {
@@ -68,4 +128,7 @@ async function sendStudentEmail(studentSubmission) {
 module.exports = {
   sendDriverEmail,
   sendStudentEmail,
+  sendDriverVerificationEmail,
+  sendDriverTakingOrderEmail,
+  sendStudentTakingOrderEmail,
 };
