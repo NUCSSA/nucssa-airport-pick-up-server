@@ -35,6 +35,8 @@ const joiStudentFormSchema = Joi.object().keys({
       email: Joi.string(),
       wechatId: Joi.string(),
       phone: Joi.string(),
+      emergencyContact: Joi.string(),
+      emergencyContactPhone: Joi.string(),
     })
   ),
   arrivingTime: Joi.string(),

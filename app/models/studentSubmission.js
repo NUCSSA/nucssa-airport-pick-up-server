@@ -11,6 +11,8 @@ const StudentSubmissionSchema = new Schema({
     email: { type: String, required: true },
     wechatId: { type: String, required: true },
     phone: { type: String, required: true },
+    emergencyContact: { type: String, required: true },
+    emergencyContactPhone: { type: String, required: true },
   }],
   arrivingTime: { type: String, required: true },
   flightNumber: { type: String, required: true },
