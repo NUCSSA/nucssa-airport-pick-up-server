@@ -45,11 +45,12 @@ OrderSchema.set('toObject', { virtuals: true });
 OrderSchema.set('toJson', { virtuals: true });
 
 OrderSchema.statics = {
-  findWithPopulate(query) {
-    return this.find(query)
+  definedPopulate(query) {
+    return query
       .populate('student')
       .populate('driver');
   },
+
 };
 
 mongoose.model(orderSchemaString, OrderSchema);

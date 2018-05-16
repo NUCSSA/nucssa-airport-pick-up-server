@@ -41,9 +41,11 @@ async function createOrder({ driverWechatId, studentWechatId }) {
 }
 
 async function findStudentOrder({ studentWechatId }) {
-  return Order.findOne({
-    studentWechatId,
-  });
+  return Order.definedPopulate(
+    Order.findOne({
+      studentWechatId,
+    })
+  );
 }
 
 async function findDriverOrders({ driverWechatId }) {
@@ -53,7 +55,7 @@ async function findDriverOrders({ driverWechatId }) {
 }
 
 async function findAllOrders() {
-  return Order.findWithPopulate();
+  return Order.definedPopulate(Order.find());
 }
 
 async function findAllNeedToBeAssignedStudentSubmissions() {
