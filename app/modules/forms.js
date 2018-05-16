@@ -52,7 +52,7 @@ const submissionType = (type) => {
   }
 };
 
-const isRepeatSubmission = async (submissionModel, wechatId)  => {
+const isRecordExist = async (submissionModel, wechatId)  => {
   let submission = await submissionModel.findOne({
     wechatId: wechatId,
   });
@@ -60,9 +60,10 @@ const isRepeatSubmission = async (submissionModel, wechatId)  => {
 };
 
 const persistSubmission = async ({ newFormBody, formType }) => {
-  const submissionModel = submissionType(formType)
-  const { wechatId } = newFormBody
-  if (isRepeatSubmission(submissionModel, wechatId)) {
+  const submissionModel = submissionType(formType);
+  const { wechatId } = newFormBody;
+  let isExist = await isRecordExist(submissionModel, wechatId);
+  if (isExist === false) {
     throw new Error('Cannot submit form more than once')
   }
   return submissionModel.findOneAndUpdate({
