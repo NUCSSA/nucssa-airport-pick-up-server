@@ -18,4 +18,7 @@ module.exports = function (app) {
   const drivers = require('./drivers');
   apiRouter.use('/drivers', drivers);
 
+  const admin = require('./admin');
+  apiRouter.use('/admin', admin)
+
 };
