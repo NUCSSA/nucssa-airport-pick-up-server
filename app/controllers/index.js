@@ -1,6 +1,8 @@
 'use strict';
 module.exports = function (app) {
   const express = require('express');
+  const { checkJwt } = require('../middlewares/authorization');
+  const { authErrorHandler } = require('../middlewares/errorHandler')
 
   const apiRouter = express.Router();
   app.use('/api', apiRouter);
@@ -18,7 +20,12 @@ module.exports = function (app) {
   const drivers = require('./drivers');
   apiRouter.use('/drivers', drivers);
 
+  // Private routes
+  apiRouter.use(checkJwt)
   const admin = require('./admin');
   apiRouter.use('/admin', admin)
+
+  apiRouter.use(authErrorHandler)
+
 
 };
