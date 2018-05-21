@@ -23,9 +23,17 @@ async function verifyDriver({ driverWechatId }) {
   });
 }
 
+async function updateDriver({ driverWechatId, newFormBody }) {
+  console.log(newFormBody)
+  return DriverSubmission.findOneAndUpdate({
+    wechatId: driverWechatId,
+  }, newFormBody,);
+}
+
 module.exports = {
   findAllDrivers,
   verifyDriver,
   findDriver,
+  updateDriver,
 };
 

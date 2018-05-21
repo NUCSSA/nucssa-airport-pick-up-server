@@ -1,15 +1,21 @@
 'use strict';
 
 const express = require('express');
-// const Joi = require('joi');
+const Joi = require('joi');
 const _ = require('lodash');
 const router = express.Router();
 
-const { findAllDrivers, findDriver, verifyDriver } = require('../../modules/drivers');
+const {
+  findAllDrivers,
+  findDriver,
+  verifyDriver,
+  updateDriver,
+} = require('../../modules/drivers');
 const { sendDriverVerificationEmail } = require('../../modules/mailer');
+const { joiDriverFormSchema } = require('../../modules/forms');
+const { sendJoiValidationError } = require('../../util');
 
-
-router.get('/drivers', async function(req, res) {
+router.get('/driver/list', async function(req, res) {
   const allDrivers = await findAllDrivers();
     res.json(allDrivers);
 });
@@ -41,4 +47,36 @@ router.get('/driver/:driverWechatId', async function(req, res) {
     res.json(driver);
   }
 })
+
+router.post('/update/:driverWechatId', async function(req, res) {
+  let driverWechatId = req.params['driverWechatId'];
+  let newFormBody;
+  req.body.wechatId = driverWechatId
+  const fieldList = ['availableTimeSlot', 'carType', 'degree', 'email',
+    'gender', 'huskyEmail', 'name', 'phone', 'remark', 'status', 'wechatId'];
+
+  newFormBody = _.pick(req.body, fieldList);
+
+  console.log(newFormBody)
+  // validate field
+  const joiResult  = Joi.validate(newFormBody, joiDriverFormSchema, {
+    presence: 'required',
+    abortEarly: false,
+  });
+  const joiError = joiResult.error;
+
+  if (!_.isNil(joiError)) {
+    return sendJoiValidationError(joiError, res);
+  }
+  try {
+    await updateDriver({
+      driverWechatId,
+      newFormBody,
+    });
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+})
 module.exports = router;
+
