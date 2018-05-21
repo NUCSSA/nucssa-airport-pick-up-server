@@ -15,7 +15,7 @@ const { sendDriverVerificationEmail } = require('../../modules/mailer');
 const { joiDriverFormSchema } = require('../../modules/forms');
 const { sendJoiValidationError } = require('../../util');
 
-router.get('/driver/list', async function(req, res) {
+router.get('/list', async function(req, res) {
   const allDrivers = await findAllDrivers();
     res.json(allDrivers);
 });
@@ -36,7 +36,7 @@ router.post('/verify/:driverWechatId', async function(req, res) {
   }
 });
 
-router.get('/driver/:driverWechatId', async function(req, res) {
+router.get('/:driverWechatId', async function(req, res) {
   let driverWechatId = req.params['driverWechatId'];
   let driver = await findDriver({ driverWechatId });
   if (_.isNil(driver)) {
@@ -46,18 +46,18 @@ router.get('/driver/:driverWechatId', async function(req, res) {
   } else {
     res.json(driver);
   }
-})
+});
 
 router.post('/update/:driverWechatId', async function(req, res) {
   let driverWechatId = req.params['driverWechatId'];
   let newFormBody;
-  req.body.wechatId = driverWechatId
+  req.body.wechatId = driverWechatId;
   const fieldList = ['availableTimeSlot', 'carType', 'degree', 'email',
     'gender', 'huskyEmail', 'name', 'phone', 'remark', 'status', 'wechatId'];
 
   newFormBody = _.pick(req.body, fieldList);
 
-  console.log(newFormBody)
+  console.log(newFormBody);
   // validate field
   const joiResult  = Joi.validate(newFormBody, joiDriverFormSchema, {
     presence: 'required',
@@ -77,6 +77,7 @@ router.post('/update/:driverWechatId', async function(req, res) {
   } catch (err) {
     res.status(500).send(err.message);
   }
-})
+});
+
 module.exports = router;
 

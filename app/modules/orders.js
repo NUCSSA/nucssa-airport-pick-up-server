@@ -40,6 +40,12 @@ async function createOrder({ driverWechatId, studentWechatId }) {
   })
 }
 
+async function removeOrder({ studentWechatId }) {
+  return Order.findOneAndDelete({
+    studentWechatId,
+  })
+}
+
 async function findStudentOrder({ studentWechatId }) {
   let studentOrder = await Order.definedPopulate(
     Order.findOne({
@@ -97,6 +103,7 @@ module.exports = {
   findAllStudentSubmissions,
   createOrder,
   findAllOrders,
+  removeOrder,
   joiOrderSchema,
 };
 

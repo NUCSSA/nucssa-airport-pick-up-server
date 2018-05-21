@@ -22,8 +22,10 @@ module.exports = function (app) {
 
   // Private routes
   apiRouter.use(checkJwt)
-  const admin = require('./admin/drivers');
-  apiRouter.use('/admin', admin)
+  const admin_drivers = require('./admin/drivers');
+  const admin_orders = require('./admin/orders')
+  apiRouter.use('/admin/drivers', admin_drivers)
+  apiRouter.use('/admin/orders', admin_orders)
 
   apiRouter.use(authErrorHandler)
 
