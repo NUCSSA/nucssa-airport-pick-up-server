@@ -1,13 +1,28 @@
 'use strict';
 
 const express = require('express');
-// const Joi = require('joi');
-// const _ = require('lodash');
 const router = express.Router();
-const { findDriverOrders, removeOrder } = require('../../modules/orders')
 const { sendDriverCancelOrderEmail } = require('../../modules/mailer');
 const { findDriver } = require('../../modules/drivers');
 const { findStudentSubmission } = require('../../modules/students');
+const {
+  findDriverOrders,
+  removeOrder,
+  findAllOrders,
+  findAllNeedToBeAssignedStudentSubmissions,
+} = require('../../modules/orders')
+
+router.get('/assignedList', async function(req, res) {
+  const allOrders = await findAllOrders();
+  console.log(allOrders);
+  res.json(allOrders);
+});
+
+router.get('/unassignedList', async function(req, res) {
+  const allUnassignedOrders = await findAllNeedToBeAssignedStudentSubmissions();
+  console.log(allUnassignedOrders);
+  res.json(allUnassignedOrders);
+});
 
 router.get('/:driverWechatId', async function(req, res) {
   let driverWechatId = req.params['driverWechatId'];
@@ -36,5 +51,7 @@ router.delete('/:studentWechatId', async function(req, res) {
   }
 
 });
+
+
 
 module.exports = router;
