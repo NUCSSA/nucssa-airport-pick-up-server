@@ -5,7 +5,9 @@ const express = require('express');
 // const _ = require('lodash');
 const router = express.Router();
 const { findDriverOrders, removeOrder } = require('../../modules/orders')
-
+const { sendDriverCancelOrderEmail } = require('../../modules/mailer');
+const { findDriver } = require('../../modules/drivers');
+const { findStudentSubmission } = require('../../modules/students');
 
 router.get('/:driverWechatId', async function(req, res) {
   let driverWechatId = req.params['driverWechatId'];
@@ -16,7 +18,17 @@ router.get('/:driverWechatId', async function(req, res) {
 router.delete('/:studentWechatId', async function(req, res) {
   let studentWechatId = req.params['studentWechatId'];
   try {
-    await removeOrder({ studentWechatId })
+    let order = await removeOrder({ studentWechatId })
+    try {
+      // TODO: Incorrect implementation shouldn't block the function.
+      let { driverWechatId, studentWechatId } = order
+      let driver = await findDriver({ driverWechatId });
+      let student = await findStudentSubmission({ studentWechatId});
+      sendDriverCancelOrderEmail(student, driver);
+    } catch (err) {
+      // TODO: should use sentry to log the error
+      console.log(err);
+    }
     res.sendStatus(200);
   } catch (err) {
     console.log(err.message)

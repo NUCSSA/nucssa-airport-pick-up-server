@@ -9,6 +9,7 @@ const {
   getStudentSubmissionHTML,
   getDriverVerificationSuccessHTML,
   getDriverTakingOrderHTML,
+  getDriverCancelOrderHTML,
   getStudentTakingOrderHTML,
 } = require('../data/emailTempaltes');
 
@@ -82,6 +83,16 @@ function buildStudentTakingOrderOptions(studentWechatId, individualStudent) {
   })
 }
 
+function buildDriverCancelOrderOptions(individualStudent, driverSubmission) {
+  let { email, name } = individualStudent;
+  let {name: driverName, wechatId: driverWechatId } = driverSubmission
+  return buildMailOptions({
+    to: email,
+    subject: 'NUCSSA接机活动: 您的订单被取消',
+    htmlText: getDriverCancelOrderHTML(name, driverName, driverWechatId),
+  })
+}
+
 async function sendMail(mailOptions) {
   return transporter.sendMail(mailOptions);
 }
@@ -113,6 +124,17 @@ async function sendDriverTakingOrderEmail(driverSubmission, studentWechatId) {
   return sendMail(driverTakingOrderOptions);
 }
 
+async function sendDriverCancelOrderEmail(studentSubmission, driverSubmission) {
+  let driverCancelMailOptionSet = _.map(studentSubmission.studentSet, (s) => {
+    return buildDriverCancelOrderOptions(s, driverSubmission);
+  });
+
+  let asyncFunctionSet = _.map(driverCancelMailOptionSet, (driverCancelMailOption) => {
+    return sendMail(driverCancelMailOption)
+  });
+  return Promise.all(asyncFunctionSet);
+}
+
 async function sendStudentTakingOrderEmail(studentSubmission) {
   let studentMailOptionSet = _.map(studentSubmission.studentSet, (s) => {
     return buildStudentTakingOrderOptions(studentSubmission.wechatId, s);
@@ -130,5 +152,6 @@ module.exports = {
   sendStudentEmail,
   sendDriverVerificationEmail,
   sendDriverTakingOrderEmail,
+  sendDriverCancelOrderEmail,
   sendStudentTakingOrderEmail,
 };
