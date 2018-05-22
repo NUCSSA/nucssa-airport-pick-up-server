@@ -24,8 +24,10 @@ module.exports = function (app) {
   apiRouter.use(checkJwt)
   const admin_drivers = require('./admin/drivers');
   const admin_orders = require('./admin/orders')
+  const admin_students = require('./admin/students')
   apiRouter.use('/admin/drivers', admin_drivers)
   apiRouter.use('/admin/orders', admin_orders)
+  apiRouter.use('/admin/students', admin_students)
 
   apiRouter.use(authErrorHandler)
 

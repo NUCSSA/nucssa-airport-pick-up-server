@@ -16,8 +16,12 @@ const { joiDriverFormSchema } = require('../../modules/forms');
 const { sendJoiValidationError } = require('../../util');
 
 router.get('/list', async function(req, res) {
-  const allDrivers = await findAllDrivers();
+  try {
+    const allDrivers = await findAllDrivers();
     res.json(allDrivers);
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
 });
 
 router.post('/verify/:driverWechatId', async function(req, res) {
@@ -57,7 +61,6 @@ router.post('/update/:driverWechatId', async function(req, res) {
 
   newFormBody = _.pick(req.body, fieldList);
 
-  console.log(newFormBody);
   // validate field
   const joiResult  = Joi.validate(newFormBody, joiDriverFormSchema, {
     presence: 'required',
