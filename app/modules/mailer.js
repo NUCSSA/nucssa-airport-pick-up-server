@@ -93,6 +93,19 @@ function buildDriverCancelOrderOptions(individualStudent, driverSubmission) {
   })
 }
 
+function buildStudentCancelOrderOptions(driverSubmission, studentSubmission) {
+  let { name, huskyEmail } = driverSubmission
+  let { wechatId } = studentSubmission
+  let studentSetName = _.map(studentSubmission.studentSet, (s) => {
+    return s.name
+  }).join(', ')
+  return buildMailOptions({
+    to: huskyEmail,
+    subject: 'NUCSSA接机活动: 您的订单被取消',
+    htmlText: getCancelOrderHTML(name, studentSetName, wechatId),
+  })
+}
+
 async function sendMail(mailOptions) {
   return transporter.sendMail(mailOptions);
 }
@@ -135,6 +148,11 @@ async function sendDriverCancelOrderEmail(studentSubmission, driverSubmission) {
   return Promise.all(asyncFunctionSet);
 }
 
+async function sendStudentCancelOrderEmail(driverSubmission, studentSubmission) {
+  let studentCancelMailOption = buildStudentCancelOrderOptions(driverSubmission, studentSubmission);
+  return sendMail(studentCancelMailOption)
+}
+
 async function sendStudentTakingOrderEmail(studentSubmission) {
   let studentMailOptionSet = _.map(studentSubmission.studentSet, (s) => {
     return buildStudentTakingOrderOptions(studentSubmission.wechatId, s);
@@ -154,4 +172,5 @@ module.exports = {
   sendDriverTakingOrderEmail,
   sendDriverCancelOrderEmail,
   sendStudentTakingOrderEmail,
+  sendStudentCancelOrderEmail,
 };
