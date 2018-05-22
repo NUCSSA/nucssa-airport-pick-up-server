@@ -27,7 +27,7 @@ router.post('/submissions/:formType', async function (req, res) {
   if (formType === driverType) {
 
     const fieldList = ['availableTimeSlot', 'carType', 'degree', 'email',
-      'gender', 'huskyEmail', 'name', 'phone', 'remark', 'status', 'wechatId'];
+      'gender', 'huskyEmail', 'email', 'name', 'phone', 'remark', 'status', 'wechatId'];
 
     newFormBody = _.pick(req.body, fieldList);
 

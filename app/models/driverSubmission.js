@@ -8,11 +8,13 @@ const DriverSubmissionSchema = new Schema({
   degree: { type: String, required: true },
   gender: { type: String, required: true },
   huskyEmail: { type: String, required: true },
+  email: { type: String, required: false },
   name: { type: String, required: true },
   phone: { type: String, required: true },
   status: { type: String, required: true },
   wechatId: { type: String, required: true, unique: true },
   verified: { type: Boolean, required: true, default: false },
+  remark: { type: String, required: false },
 }, {
   timestamps: true,
 });

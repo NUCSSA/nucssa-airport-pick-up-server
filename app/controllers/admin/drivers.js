@@ -57,7 +57,7 @@ router.post('/update/:driverWechatId', async function(req, res) {
   let newFormBody;
   req.body.wechatId = driverWechatId;
   const fieldList = ['availableTimeSlot', 'carType', 'degree', 'email',
-    'gender', 'huskyEmail', 'name', 'phone', 'remark', 'status', 'wechatId'];
+    'gender', 'huskyEmail', 'email', 'name', 'phone', 'remark', 'status', 'wechatId'];
 
   newFormBody = _.pick(req.body, fieldList);
 

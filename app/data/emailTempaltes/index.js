@@ -79,10 +79,10 @@ const getStudentTakingOrderHTML = (name, studentWechatId) => {
   `
 };
 
-const getDriverCancelOrderHTML = (name, driverName, driverWechatId) => {
+const getCancelOrderHTML = (name, cancellerName, cancellerWechatId) => {
   return `
   <h4>您好，${name}</h4>
-     <h4>您的订单已被司机${driverName}(微信ID: ${ driverWechatId }) 取消.
+     <h4>您的订单已被${cancellerName}(微信ID: ${ cancellerWechatId }) 取消.
      <h4>详情请联系司机, 或者NUCSSA管理员：${ADMIN_WECHAT_ACCOUNT}</h4>
      </h4>
   <br/>
@@ -95,5 +95,5 @@ module.exports = {
   getDriverVerificationSuccessHTML,
   getDriverTakingOrderHTML,
   getStudentTakingOrderHTML,
-  getDriverCancelOrderHTML,
+  getCancelOrderHTML,
 };

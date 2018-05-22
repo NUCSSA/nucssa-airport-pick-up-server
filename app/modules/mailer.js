@@ -9,7 +9,7 @@ const {
   getStudentSubmissionHTML,
   getDriverVerificationSuccessHTML,
   getDriverTakingOrderHTML,
-  getDriverCancelOrderHTML,
+  getCancelOrderHTML,
   getStudentTakingOrderHTML,
 } = require('../data/emailTempaltes');
 
@@ -89,7 +89,7 @@ function buildDriverCancelOrderOptions(individualStudent, driverSubmission) {
   return buildMailOptions({
     to: email,
     subject: 'NUCSSA接机活动: 您的订单被取消',
-    htmlText: getDriverCancelOrderHTML(name, driverName, driverWechatId),
+    htmlText: getCancelOrderHTML(name, driverName, driverWechatId),
   })
 }
 

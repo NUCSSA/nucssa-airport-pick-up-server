@@ -12,7 +12,14 @@ async function findStudentSubmission({ studentWechatId }) {
   });
 }
 
+async function updateStudent( { studentWechatId, newFormBody }) {
+  return StudentSubmission.findOneAndUpdate({
+    wechatId: studentWechatId,
+  }, newFormBody,);
+}
+
 module.exports = {
   findStudentSubmission,
+  updateStudent,
 };
 

@@ -18,6 +18,7 @@ const StudentSubmissionSchema = new Schema({
   flightNumber: { type: String, required: true },
   address: { type: String, required: true },
   luggageNumber: { type: String, required: true },
+  remark: { type: String, required: false },
 }, {
   timestamps: true,
 });
