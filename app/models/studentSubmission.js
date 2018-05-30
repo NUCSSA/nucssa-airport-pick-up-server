@@ -14,10 +14,10 @@ const StudentSubmissionSchema = new Schema({
     emergencyContact: { type: String, required: true },
     emergencyContactPhone: { type: String, required: true },
   }],
-  arrivingTime: { type: String, required: true },
+  arrivingTime: { type: Date, required: true },
   flightNumber: { type: String, required: true },
   address: { type: String, required: true },
-  luggageNumber: { type: String, required: true },
+  luggageNumber: { type: Number, required: true },
   remark: { type: String, required: false },
 }, {
   timestamps: true,

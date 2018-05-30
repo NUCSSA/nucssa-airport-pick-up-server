@@ -39,10 +39,10 @@ const joiStudentFormSchema = Joi.object().keys({
       emergencyContactPhone: Joi.string(),
     })
   ),
-  arrivingTime: Joi.string(),
+  arrivingTime: Joi.date(),
   flightNumber: Joi.string(),
   address: Joi.string(),
-  luggageNumber: Joi.string(),
+  luggageNumber: Joi.number().integer().min(1).max(6),
   remark: Joi.string().optional(),
 });
 
