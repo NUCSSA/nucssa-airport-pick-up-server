@@ -12,6 +12,7 @@ const {
   findAllNeedToBeAssignedStudentSubmissions,
   findAllStudentSubmissions,
   createOrder,
+  completeOrder,
   findAllOrders,
   joiOrderSchema,
 } = require('../modules/orders');
@@ -59,7 +60,7 @@ router.post('/create', async function(req, res) {
   try {
     await createOrder(reqBody);
     try {
-      // TODO: Incorrect implementation shouldn't block the function.
+      // TODO: Incorrect implementation shouldn't block the  function.
       let { studentWechatId, driverWechatId } = reqBody;
       let driver = await findDriver({ driverWechatId });
       sendDriverTakingOrderEmail(driver, studentWechatId);
@@ -71,6 +72,17 @@ router.post('/create', async function(req, res) {
     }
     res.sendStatus(200);
   } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.put('/complete', async function(req, res) {
+  let studentWechatId = req.body.studentWechatId;
+  try {
+    await completeOrder({ studentWechatId })
+    res.sendStatus(200)
+  } catch (err) {
+    console.log(err.message)
     res.status(500).send(err.message);
   }
 });

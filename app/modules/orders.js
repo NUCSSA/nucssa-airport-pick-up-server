@@ -4,7 +4,7 @@ const Joi = require('joi');
 
 const { studentSubmissionSchemaString } = require('../models/studentSubmission');
 // const { orderSchemaString, BEFORE, DONE, IN_PROGRESS } = require('../models/order');
-const { orderSchemaString, BEFORE } = require('../models/order');
+const { orderSchemaString, BEFORE, DONE } = require('../models/order');
 
 
 const StudentSubmission = mongoose.model(studentSubmissionSchemaString);
@@ -38,6 +38,14 @@ async function createOrder({ driverWechatId, studentWechatId }) {
   }, {
     upsert: true,
   })
+}
+
+async function completeOrder({ studentWechatId }) {
+  return Order.findOneAndUpdate({
+    studentWechatId,
+  }, {
+    status: DONE,
+  });
 }
 
 async function removeOrder({ studentWechatId }) {
@@ -102,6 +110,7 @@ module.exports = {
   findAllNeedToBeAssignedStudentSubmissions,
   findAllStudentSubmissions,
   createOrder,
+  completeOrder,
   findAllOrders,
   removeOrder,
   joiOrderSchema,
