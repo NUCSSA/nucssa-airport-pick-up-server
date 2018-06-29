@@ -26,7 +26,7 @@ router.delete('/student/:studentWechatId', async function(req, res) {
       let { driverWechatId, studentWechatId } = order
       let driver = await findDriver({ driverWechatId });
       let student = await findStudentSubmission({ studentWechatId });
-      sendDriverCancelOrderEmail(student, driver);
+      await sendDriverCancelOrderEmail(student, driver);
     } catch (err) {
       // TODO: should use sentry to log the error
       console.log(err);
@@ -47,7 +47,7 @@ router.delete('/driver/:studentWechatId', async function(req, res) {
       let { driverWechatId } = order
       let student =await findStudentSubmission({ studentWechatId })
       let driver = await findDriver({ driverWechatId });
-      sendStudentCancelOrderEmail(driver, student);
+      await sendStudentCancelOrderEmail(driver, student);
     } catch (err) {
       // TODO: should use sentry to log the error
       console.log(err);

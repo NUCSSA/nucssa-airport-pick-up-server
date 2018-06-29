@@ -11,6 +11,8 @@ const {
   getDriverTakingOrderHTML,
   getCancelOrderHTML,
   getStudentTakingOrderHTML,
+  getSubscribeHTML,
+  LISTSERV_EMAIL,
 } = require('../data/emailTempaltes');
 
 let transporter = nodemailer.createTransport({
@@ -21,10 +23,9 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-
-function buildMailOptions({ to, subject, htmlText }) {
+function buildMailOptions({ from='"NUCSSA IT部" <nucssait@gmail.com>', to, subject, htmlText }) {
   return {
-    from: '"NUCSSA IT部" <nucssait@gmail.com>', // sender address
+    from: from, // sender address
     to: to, // list of receivers
     subject: subject, // Subject line
     // text: 'Hello world?', // plain text body
@@ -83,6 +84,17 @@ function buildStudentTakingOrderOptions(studentWechatId, individualStudent) {
   })
 }
 
+function buildSubscriptionOptions(individualStudent) {
+  let { email, name } = individualStudent;
+  const fromStirng = `"${name}" <${email}>`
+  return buildMailOptions({
+    from: fromStirng,
+    to: LISTSERV_EMAIL,
+    subject: 'NUCSSA邮件列表订阅成功',
+    htmlText: getSubscribeHTML(),
+  })
+}
+
 function buildDriverCancelOrderOptions(individualStudent, driverSubmission) {
   let { email, name } = individualStudent;
   let {name: driverName, wechatId: driverWechatId } = driverSubmission
@@ -106,8 +118,14 @@ function buildStudentCancelOrderOptions(driverSubmission, studentSubmission) {
   })
 }
 
+
 async function sendMail(mailOptions) {
   return transporter.sendMail(mailOptions);
+}
+
+async function sendMailWithoutAuth(mailOptions) {
+  const sendmail = require('sendmail')({silent: true})
+  return sendmail(mailOptions)
 }
 
 async function sendDriverEmail(driverSubmission) {
@@ -165,6 +183,19 @@ async function sendStudentTakingOrderEmail(studentSubmission) {
   return Promise.all(asyncFunctionSet);
 }
 
+async function sendStudentSubscriptionEmail(studentSubmission) {
+
+  let studentMailOptionSet = _.map(studentSubmission.studentSet, (s) => {
+    return buildSubscriptionOptions(s);
+  });
+
+  let asyncFunctionSet = _.map(studentMailOptionSet, (studentMailOption) => {
+    return sendMailWithoutAuth(studentMailOption);
+  });
+
+  return Promise.all(asyncFunctionSet);
+}
+
 module.exports = {
   sendDriverEmail,
   sendStudentEmail,
@@ -173,4 +204,5 @@ module.exports = {
   sendDriverCancelOrderEmail,
   sendStudentTakingOrderEmail,
   sendStudentCancelOrderEmail,
+  sendStudentSubscriptionEmail,
 };

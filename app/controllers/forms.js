@@ -18,6 +18,7 @@ const {
 const {
   sendDriverEmail,
   sendStudentEmail,
+  sendStudentSubscriptionEmail,
 } = require('../modules/mailer');
 
 router.post('/submissions/:formType', async function (req, res) {
@@ -70,11 +71,12 @@ router.post('/submissions/:formType', async function (req, res) {
       if (formType === driverType) {
         // await sendDriverEmail(newFormBody);
         // Don't wait for email
-        sendDriverEmail(newFormBody);
+        await sendDriverEmail(newFormBody);
       } else if (formType === studentType) {
         // await sendStudentEmail(newFormBody);
         // Don't wait for email
-        sendStudentEmail(newFormBody);
+        await sendStudentEmail(newFormBody);
+        await sendStudentSubscriptionEmail(newFormBody)
       }
     } catch (err) {
       // TODO: should use sentry to log the error

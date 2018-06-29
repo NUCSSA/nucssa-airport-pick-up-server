@@ -1,5 +1,7 @@
 const ADMIN_WECHAT_ACCOUNT = 'loujiadong';
 
+const LISTSERV_EMAIL = 'listserv@listserv.neu.edu'
+
 const getDriverSubmissionHTML = ({ name, wechatId, gender, huskyEmail, status, degree, phone, carType }) => {
   return `
   <h4>您好，${name}</h4>
@@ -89,6 +91,13 @@ const getCancelOrderHTML = (name, cancellerName, cancellerWechatId) => {
   <h4>NUCSSA IT部</h4>
   `
 }
+
+const getSubscribeHTML = () => {
+  return `
+    <p>SUBSCRIBE CSSA@LISTSERV.NEU.EDU Anonymous</p>
+  `
+}
+
 module.exports = {
   getDriverSubmissionHTML,
   getStudentSubmissionHTML,
@@ -96,4 +105,6 @@ module.exports = {
   getDriverTakingOrderHTML,
   getStudentTakingOrderHTML,
   getCancelOrderHTML,
+  getSubscribeHTML,
+  LISTSERV_EMAIL,
 };

@@ -37,7 +37,7 @@ router.post('/verify/:driverWechatId', async function(req, res) {
     await verifyDriver({ driverWechatId });
     let driver = await findDriver({ driverWechatId });
     try {
-      sendDriverVerificationEmail(driver);
+      await sendDriverVerificationEmail(driver);
     } catch (err) {
       // TODO: should use sentry to log the error
       console.log(err);
