@@ -5,7 +5,7 @@ const LISTSERV_EMAIL = 'listserv@listserv.neu.edu'
 const getDriverSubmissionHTML = ({ name, wechatId, gender, huskyEmail, status, degree, phone, carType }) => {
   return `
   <h4>您好，${name}</h4>
-  <h4>    感谢您报名NUCSSA接机服务，请您联系NUCSSA管理员，您需要提供您的驾照来认证您的账号：${ADMIN_WECHAT_ACCOUNT}</h4>
+  <h4>    感谢您报名NUCSSA接机服务，请您联系NUCSSA管理员微信号：${ADMIN_WECHAT_ACCOUNT}，您需要提供您的驾照来认证您的账号</h4>
   <h4>主要负责人微信: ${ wechatId }</h4>
   <h4>姓名: ${ name }</h4>
   <h4>性别: ${ gender }</h4>
