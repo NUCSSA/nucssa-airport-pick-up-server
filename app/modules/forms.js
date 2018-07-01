@@ -17,23 +17,23 @@ const joiDriverFormSchema = Joi.object().keys({
   degree: Joi.string(),
   email: Joi.string().optional(),
   gender: Joi.string(),
-  huskyEmail: Joi.string(),
+  huskyEmail: Joi.string().email(),
   name: Joi.string(),
   phone: Joi.string(),
   remark: Joi.string().optional(),
   status: Joi.string(),
-  wechatId: Joi.string(),
+  wechatId: Joi.string().alphanum(),
 });
 
 const joiStudentFormSchema = Joi.object().keys({
-  wechatId: Joi.string(),
+  wechatId: Joi.string().alphanum(),
   studentSet: Joi.array().min(1).max(3).items(
     Joi.object().keys({
       name: Joi.string(),
       nuid: Joi.string(),
       degree: Joi.string(),
-      email: Joi.string(),
-      wechatId: Joi.string(),
+      email: Joi.string().email(),
+      wechatId: Joi.string().alphanum(),
       phone: Joi.string(),
       emergencyContact: Joi.string(),
       emergencyContactPhone: Joi.string(),
