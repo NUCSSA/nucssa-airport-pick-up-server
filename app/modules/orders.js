@@ -89,6 +89,17 @@ async function findDriverOrders({ driverWechatId }) {
   );
 }
 
+async function findDriversOrdersReport() {
+  return Order.aggregate([
+    {
+      $group: {
+        _id: '$driverWechatId',
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+}
+
 async function findAllOrders() {
   return Order.definedPopulate(Order.find());
 }
@@ -107,6 +118,7 @@ async function findAllNeedToBeAssignedStudentSubmissions() {
 module.exports = {
   findStudentOrder,
   findDriverOrders,
+  findDriversOrdersReport,
   findAllNeedToBeAssignedStudentSubmissions,
   findAllStudentSubmissions,
   createOrder,

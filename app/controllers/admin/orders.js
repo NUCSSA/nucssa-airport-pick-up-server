@@ -9,7 +9,8 @@ const {
   findDriverOrders,
   findStudentOrder,
   removeOrder,
-} = require('../../modules/orders')
+  findDriversOrdersReport,
+} = require('../../modules/orders');
 
 router.get('/driver/:driverWechatId', async function(req, res) {
   let driverWechatId = req.params['driverWechatId'];
@@ -68,6 +69,18 @@ router.get('/student/:studentWechatId', async function(req, res) {
     res.status(500).send(err.message)
   }
 });
+
+
+router.get('/listOfDriverAndOrdersTaken', async function(req, res) {
+  try {
+    const report = await findDriversOrdersReport();
+
+    res.json(report);
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+});
+
 
 
 
